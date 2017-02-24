@@ -1,15 +1,14 @@
 #' ConfigViewer
 #'
-#' Interactive plots for simultaneously viewing conventional 
+#' Interactive method for simultaneously viewing conventional 
 #' GWAS manhattan plots alongside FINEMAP results, with graphical
-#' representation of most probable causal SNP configurations.
+#' representation of the most probable causal SNP configurations.
 #' You can plot one to three manhattan plots simultaneously,
 #' viewing conventional, FINEMAP, and conditional plots.
-#' For viewing manhattan plots with color-coded correlation to top  
-#' SNP, you may upload either the z file and ld file used for 
-#' FINEMAPing, or a correlations file with columns 'rsid' and 'corr'
-#' representing rsids and correlations to top SNP, respectively.
-#' For large ld matrices, creating this correlations data frame will
+#' For viewing manhattan plots with color-coded correlation to the top  
+#' SNP, you may upload either the .z file and .ld file used for 
+#' FINEMAPing, or a correlations data frame with columns 'rsid' and 'corr'.
+#' For large LD matrices, creating this correlations data frame will
 #' speed up plot generation time significantly.
 #'
 #' @import htmlwidgets
@@ -19,21 +18,21 @@
 #'
 #' @param pvalues An obligatory data frame containing the column names 'rsid', 
 #'		'position', and 'pvalue'. Other columns may be included, but
-#'		will be ignored in analysis.
+#'		will be ignored in plotting.
 #' @param snp_probs An optional data frame containing the column names 'rsid',
 #'		'snp_prob', and 'snp_log10bf'. Corresponds to the .snp
 #'		output file from FINEMAP.
 #' @param cond_pvalues An optional data frame containing the column names 'rsid',
 #'		and 'cond_pvalue'. Other columns may be included, but will be 
-#'		ignored in the analysis- meaning position values come from the pvalues
+#'		ignored in plotting- meaning SNP positions come from the pvalues
 #'		object.
 #' @param config_probs An optional data frame containing the column names 
 #'		'rank', 'config', 'config_prob', and 'config_log10bf'. Corresponds to 
-#'		the .config output file from FINEMAP
+#'		the .config output file from FINEMAP.
 #' @param correlations An optional data frame containing the column names
 #'		'rsid' and 'corr', giving each rsid's correlation to the top SNP. For 
 #'		datasets with a large LD correlation matrix, creating this object
-#' 		speeds up plot time significantly. Provide either correlations object,
+#' 		speeds up plot generation time significantly. Provide either correlations object,
 #' 		or z_file and ld_file together.
 #' @param z_file An optional data frame containing the column name 'rsid'. 
 #' 		Provide either correlations object, or z_file and ld_file together.
