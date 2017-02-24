@@ -1,10 +1,10 @@
 #' ConfigViewer
 #'
-#' Interactive method for simultaneously viewing conventional 
-#' GWAS manhattan plots alongside FINEMAP results, with graphical
+#' Interactive method for simultaneously viewing single-snp 
+#' manhattan plots alongside FINEMAP results, with graphical
 #' representation of the most probable causal SNP configurations.
-#' You can plot one to three manhattan plots simultaneously,
-#' viewing conventional, FINEMAP, and conditional plots.
+#' You can plot one to three manhattan plots, simultaneously
+#' viewing single-snp, FINEMAP, and conditional results.
 #' For viewing manhattan plots with color-coded correlation to the top  
 #' SNP, you may upload either the .z file and .ld file used for 
 #' FINEMAPing, or a correlations data frame with columns 'rsid' and 'corr'.
@@ -17,15 +17,15 @@
 #'
 #'
 #' @param pvalues An obligatory data frame containing the column names 'rsid', 
-#'		'position', and 'pvalue'. Other columns may be included, but
-#'		will be ignored in plotting.
+#'		'position', and 'pvalue'. Assuming the results are from a single-snp test.
+#'	 	Other columns may be included, but will be ignored in plotting.
 #' @param snp_probs An optional data frame containing the column names 'rsid',
 #'		'snp_prob', and 'snp_log10bf'. Corresponds to the .snp
 #'		output file from FINEMAP.
 #' @param cond_pvalues An optional data frame containing the column names 'rsid',
 #'		and 'cond_pvalue'. Other columns may be included, but will be 
 #'		ignored in plotting- meaning SNP positions come from the pvalues
-#'		object.
+#'		object. Assuming the results are from a conditional test.
 #' @param config_probs An optional data frame containing the column names 
 #'		'rank', 'config', 'config_prob', and 'config_log10bf'. Corresponds to 
 #'		the .config output file from FINEMAP.
@@ -50,17 +50,18 @@
 #'		than 5000 variants, the nonsignificant (in p value and bayes factor)
 #'		variants should be subsampled. Speeds up plot responsiveness significantly
 #' 		for large datasets.
+#' @param labels Logical values asking whether plot labels (FINEMAP, single-snp,
+#'		conditional test) should be applied. Default: on only when conditional test
+#' 		results included.
 #' @param width Manual setting of plot width- will disable dynamic resizing.
 #' @param height Manual setting of plot height- will disable dynamic resizing.
-#'
-#'
 #'
 
 
 ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_probs = NULL, 
 							correlations = NULL, z_file = NULL, ld_file = NULL,
 							pval_threshold = 1e-6, snp_bf_threshold = 100, topconfigs = 5,
-							subsample = TRUE,
+							subsample = TRUE, labels = FALSE,
 							 width = NULL, height = NULL) {
     
 	elementId = NULL
