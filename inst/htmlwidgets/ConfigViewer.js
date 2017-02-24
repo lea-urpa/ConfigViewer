@@ -428,7 +428,8 @@ HTMLWidgets.widget({
 									.attr('fill', function(d,i){ return(plotdata['logBF'][d]['threshcolor']); })
 								d3.selectAll('.logpval')
 									.attr('fill', function(d,i){ return(plotdata['logpval'][d]['threshcolor']); })
-
+								d3.selectAll('.condlogpval')
+									.attr('fill', function(d,i){ return(plotdata['condlogpval'][d]['threshcolor']); })
 								d3.selectAll('.colorlegend')
 									.style('visibility', 'hidden')
 
@@ -678,6 +679,9 @@ HTMLWidgets.widget({
 
 			for( var i= 0; i< datasetnames.length; i++){
 				dat = datasetnames[i]
+				if(datasetnames[i] == 'condlogpval'){
+					
+				} else {
 				d3.select('#threshlegendgroup').append('rect')
 					.attr('class', 'threshlegend')
 					.attr('id', threshcolors[dat])
@@ -696,6 +700,7 @@ HTMLWidgets.widget({
 				   		.style('text-anchor', 'middle')
 				 	  	.style('visibility', 'visible')
 						.style('pointer-events', 'none')
+				}
 			}
 
 			// Correlation color legend	
