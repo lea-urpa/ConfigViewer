@@ -1,11 +1,60 @@
-#' <Add Title>
+#' ConfigViewer
 #'
-#' <Add Description>
+#' Interactive plots for simultaneously viewing conventional 
+#' GWAS manhattan plots alongside FINEMAP results, with graphical
+#' representation of most probable causal SNP configurations.
+#' You can plot one to three manhattan plots simultaneously,
+#' with only conventinal GWAS results (pvalues object) required.
+#' For viewing manhattan plots with color-coded correlation to top  
+#' SNP, you may upload either the z file and ld file used for 
+#' FINEMAPing, or a correlations file with columns 'rsid' and 'corr'
+#' representing rsids and correlations to top SNP, respectively.
+#' For large ld matrices, creating this correlations data frame will
+#' speed up plot generation time significantly.
 #'
 #' @import htmlwidgets
 #'
 #' @export
-ConfigViewer <- function(pvalues, snp_probs = NULL, conditional_pvalues = NULL, config_probs = NULL, 
+#'
+#'
+#' @param pvalues An obligatory data frame containing the column names 'rsid', 
+#'		'position', and 'pvalue'. Other columns may be included, but
+#'		will be ignored in analysis.
+#' @param snp_probs An optional data frame containing the column names 'rsid',
+#'		'snp_prob', and 'snp_log10bf'. Other columns may be included, 
+#'		but will be ignored in the analysis. Corresponds to the .snp
+#'		output file from FINEMAP.
+#' @param cond_pvalues
+#'
+#' 
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_probs = NULL, 
 							correlations = NULL, z_file = NULL, ld_file = NULL,
 							pval_threshold = 1e-6, snp_bf_threshold = 100, topconfigs = 5,
 							subsample = TRUE,
@@ -20,8 +69,8 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, conditional_pvalues = NULL, 
 	if( !is.null(snp_probs) & any(class(snp_probs) != "data.frame")){
 		stop("'snp_probs' must be a data frame")
 	}
-	if( !is.null(conditional_pvalues) & any(class(conditional_pvalues) != "data.frame")){
-		stop("'conditional_pvalues' must be a data frame")
+	if( !is.null(cond_pvalues) & any(class(cond_pvalues) != "data.frame")){
+		stop("'cond_pvalues' must be a data frame")
 	}
 	if( !is.null(config_probs) & any(class(config_probs) != "data.frame")){
 		stop("'config_prob' must be a data frame")
@@ -72,8 +121,8 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, conditional_pvalues = NULL, 
 	if( !is.null(snp_probs) & all(c("rsid","snp_prob","snp_log10bf") %in% colnames(snp_probs)) == FALSE){
 		stop('snp_probs data frame must contain colnames "rsid", "snp_prob", and "snp_log10bf"')
 	}
-	if( !is.null(conditional_pvalues) & all(c("rsid", "cond_pvalue") %in% colnames(conditional_pvalues)) == FALSE ){
-		stop('conditional_pvalues data frame must contain colnames "rsid", and "cond_pvalue"')
+	if( !is.null(cond_pvalues) & all(c("rsid", "cond_pvalue") %in% colnames(cond_pvalues)) == FALSE ){
+		stop('cond_pvalues data frame must contain colnames "rsid", and "cond_pvalue"')
 	}
 	if( !is.null(config_probs) & all(c("rank", "config", "config_prob", "config_log10bf") %in% colnames(config_probs)) == FALSE){
 		stop('config_probs data frame must contain colnames "rank", "config", "config_prob", and "config_log10bf"' )
@@ -92,8 +141,8 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, conditional_pvalues = NULL, 
 	if( !is.null(snp_probs) & any(duplicated(snp_probs$rsid)) == TRUE){
 		stop("Duplicate rsids in snp_probs data frame- no duplicate rsids allowed.")
 	}
-	if( !is.null(conditional_pvalues) & any(duplicated(conditional_pvalues$rsid)) == TRUE){
-		stop("Duplicate rsids in conditional_pvalues data frame- no duplicate rsids allowed.")
+	if( !is.null(cond_pvalues) & any(duplicated(cond_pvalues$rsid)) == TRUE){
+		stop("Duplicate rsids in cond_pvalues data frame- no duplicate rsids allowed.")
 	}
 	if( !is.null(z_file) & any(duplicated(z_file$rsid)) == TRUE){
 		stop("Duplicated rsids in z_file data frame- no duplicate rsids allowed.")
@@ -124,13 +173,13 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, conditional_pvalues = NULL, 
 	}
 	datasetnames <- c(datasetnames,"logpval")
 	
-	if(!is.null(conditional_pvalues)){
+	if(!is.null(cond_pvalues)){
 		datasetnames <- c(datasetnames, "condlogpval")
 		thresholds <- c(thresholds, -log10(pval_threshold))
 		labelprefix <- c(labelprefix, 'pvalue: ')
 		yaxislabels <- c(yaxislabels, '-log10 (pvalue)')
 		
-		rsids <- rsids[which(rsids %in% conditional_pvalues$rsid)] #rsids in pvalue/conditional, and snp_probs if exists
+		rsids <- rsids[which(rsids %in% cond_pvalues$rsid)] #rsids in pvalue/cond, and snp_probs if exists
 	}
 	
 	if(length(rsids) == 0){
@@ -143,8 +192,8 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, conditional_pvalues = NULL, 
 	if(!is.null(snp_probs)){
 		snp_probs <- snp_probs[which(snp_probs$rsid %in% rsids), ]
 	}
-	if(!is.null(conditional_pvalues)){
-		conditional_pvalues <- conditional_pvalues[which(conditional_pvalues$rsid %in% rsids), ]
+	if(!is.null(cond_pvalues)){
+		cond_pvalues <- cond_pvalues[which(cond_pvalues$rsid %in% rsids), ]
 	}
 	
 	# Merge datasets to a single object, to ensure order of all data is correct
@@ -153,8 +202,8 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, conditional_pvalues = NULL, 
 	if(!is.null(snp_probs)){
 		merged <- merge(merged, snp_probs[,c("rsid", "snp_prob", "snp_log10bf")])
 	}
-	if(!is.null(conditional_pvalues)){
-		merged <- merge(merged, conditional_pvalues[,c("rsid", "cond_pvalue")])
+	if(!is.null(cond_pvalues)){
+		merged <- merge(merged, cond_pvalues[,c("rsid", "cond_pvalue")])
 	}
 	
 	# Check that all rsids are present in correlation file, truncate correlation file, and merge
@@ -284,7 +333,7 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, conditional_pvalues = NULL, 
 		threshcolors <- c(threshcolors, list( logBF = merged$BFcolors))
 	}
 	
-	if(!is.null(conditional_pvalues)){
+	if(!is.null(cond_pvalues)){
 		plotdata <- c(plotdata, list( condlogpval = -log10(merged$cond_pvalue)))
 		labeldata <- c(labeldata, list( condlogpval = merged$cond_pvalue))
 		threshcolors <- c(threshcolors, list( condlogpval = merged$pvalcolors))
