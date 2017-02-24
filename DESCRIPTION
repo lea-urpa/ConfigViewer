@@ -1,9 +1,8 @@
 Package: ConfigViewer
-Title: What the Package Does (one line, title case)
+Title: Simultaneous viewing of conventional and FINEMAP manhattan plots
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends:
+Authors@R: person("Lea", "Urpa", email = "lea.urpa@helsinki.fi", role = c("aut", "cre"))
+Description: Interactive plots for simultaneously viewing conventional GWAS manhattan plots alongside FINEMAP results, with graphical representation of most probable causal SNP configurations. You can plot one to three manhattan plots simultaneously, viewing conventional, FINEMAP, and conditional plots. For viewing manhattan plots with color-coded correlation to top SNP, you may upload either the z file and ld file used for FINEMAPing, or a correlations file with columns 'rsid' and 'corr' representing rsids and correlations to top SNP, respectively. For large ld matrices, creating this correlations data frame will speed up plot generation time significantly.Depends:
     R (>= 3.3.1)
 License: What license is it under?
 Encoding: UTF-8

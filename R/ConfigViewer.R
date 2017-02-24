@@ -4,7 +4,7 @@
 #' GWAS manhattan plots alongside FINEMAP results, with graphical
 #' representation of most probable causal SNP configurations.
 #' You can plot one to three manhattan plots simultaneously,
-#' with only conventinal GWAS results (pvalues object) required.
+#' viewing conventional, FINEMAP, and conditional plots.
 #' For viewing manhattan plots with color-coded correlation to top  
 #' SNP, you may upload either the z file and ld file used for 
 #' FINEMAPing, or a correlations file with columns 'rsid' and 'corr'
