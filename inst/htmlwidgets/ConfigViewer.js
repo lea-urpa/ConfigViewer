@@ -14,11 +14,12 @@ HTMLWidgets.widget({
 	var domains = {};
 	var datasets = {};
 	var configs = [];
-
+	
 	// Shared path variables
 	var inclconfigs = 0;	
 	var configbuttons;
-	
+	var labels;
+	 
 	// Shared window size variables
 	var plotwidth;
 	var plotheight;
@@ -39,7 +40,9 @@ HTMLWidgets.widget({
 		    rsids = widgetdata['allplots']['rsids']
 			datasetnames = widgetdata['datasetinfo']['datasetnames']
 			var positions = widgetdata['allplots']['positions']
-		    
+		    labels = widgetdata['labels']
+		  	var plotlabels = widgetdata['datasetinfo']['plotlabels']
+		  
 			// Initial dataset path variables
 			var inclcorrs = 0;
 			configbuttons = 0;
@@ -85,7 +88,8 @@ HTMLWidgets.widget({
 				datasets[datasetnames[i]] = {
 					threshold: widgetdata['datasetinfo']['thresholds'][i],
 					labelprefix: widgetdata['datasetinfo']['labelprefix'][i],
-					yaxislabel: widgetdata['datasetinfo']['yaxislabels'][i]
+					yaxislabel: widgetdata['datasetinfo']['yaxislabels'][i],
+					plotlabel: widgetdata['datasetinfo']['plotlabels'][i]
 				}
 			}
 			
@@ -333,7 +337,15 @@ HTMLWidgets.widget({
 		 			 	 .call(d3.axisBottom(scaling.x)
 		 		  			.ticks(10)
 		 					.tickFormat(d3.formatPrefix(".1", 1e6)))
-		
+							
+				// Add ID tag for datasets in the top left of plot area
+				if(labels == true | datasetnames.includes('condlogpval')){
+					d3.select('#chart'+j)
+						.append('text')
+						.attr('x', margin.axis + margin.legends)
+						.attr('y', margin.top)
+						.text(datasets[dat]['plotlabel'] )	
+				}
 		    }
 			
 			
@@ -550,7 +562,6 @@ HTMLWidgets.widget({
 												 	 .call(d3.axisBottom(scaling.x_sidebar)
 											  			.ticks(10)
 														.tickFormat(d3.formatPrefix(".1", 1e6)));
-											console.log('plotheight called in onclick', plotheight)
 										}
 									}
 									configbuttons = 1 // Set path variable to show a button has been clicked
@@ -755,7 +766,7 @@ HTMLWidgets.widget({
 						.style('text-anchor', 'left')
 						.style('visibility', 'hidden')
 			}
-
+			
 		  	// Add plot for config probability
 		  	if(inclconfigs == 1){
 

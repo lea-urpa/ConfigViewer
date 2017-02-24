@@ -65,6 +65,7 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 							 width = NULL, height = NULL) {
     
 	elementId = NULL
+	labels = labels
 	
 	# Run through data input checks to make sure everything is OK
 
@@ -162,6 +163,7 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 	thresholds <- c()
 	labelprefix <- c()
 	yaxislabels <- c()
+	plotlabels <- c()
 	
 	# Find which rsids are in all given datasets
 	rsids <- pvalues$rsid # rsids in pvalue dataset
@@ -171,6 +173,7 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 		thresholds <- c(thresholds, log10(snp_bf_threshold))
 		labelprefix <- c(labelprefix, 'SNP Prob: ')
 		yaxislabels <- c(yaxislabels, 'log10 (Bayes factor)')
+		plotlabels <- c(plotlabels, "FINEMAP")
 		
 		# 	Replace all snp_probs = 0 with 1e-6
 		snp_probs$snp_prob[snp_probs$snp_prob == 0] <- 1e-6
@@ -183,12 +186,14 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 	thresholds <- c(thresholds, -log10(pval_threshold))
 	labelprefix <- c(labelprefix, 'pvalue: ')
 	yaxislabels <- c(yaxislabels, '-log10 (pvalue)')
+	plotlabels <- c(plotlabels, "SINGLE-SNP TEST")
 	
 	if(!is.null(cond_pvalues)){
 		datasetnames <- c(datasetnames, "condlogpval")
 		thresholds <- c(thresholds, -log10(pval_threshold))
 		labelprefix <- c(labelprefix, 'pvalue: ')
 		yaxislabels <- c(yaxislabels, '-log10 (pvalue)')
+		plotlabels <- c(plotlabels, 'CONDITIONAL TEST')
 		
 		rsids <- rsids[which(rsids %in% cond_pvalues$rsid)] #rsids in pvalue/cond, and snp_probs if exists
 	}
@@ -332,7 +337,8 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 	}
 	
 	datasetinfo <- list( datasetnames = datasetnames, thresholds = thresholds, 
-							labelprefix = labelprefix, yaxislabels = yaxislabels )
+							labelprefix = labelprefix, yaxislabels = yaxislabels,
+							plotlabels = plotlabels )
 	
 	plotdata <- list( logpval = -log10(merged$pvalue))
 	labeldata <- list( logpval = merged$pvalue) 
@@ -359,6 +365,8 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 	if(!is.null(config_probs)){
 		widgetdata <- c(widgetdata, list(  configdata = configdata ))
 	}
+	
+	widgetdata <- c(widgetdata, list(labels = labels))
 
 	# create widget
 	htmlwidgets::createWidget(
