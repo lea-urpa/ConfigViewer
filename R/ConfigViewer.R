@@ -158,9 +158,9 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 	### Process data for to feed to js code ###
 	# Create vector of input dataset names and dataset info needed later
 	datasetnames <- c()
-	thresholds <- -log10(pval_threshold)
-	labelprefix <- 'pvalue: '
-	yaxislabels <- '-log10 (pvalue)'
+	thresholds <- c()
+	labelprefix <- c()
+	yaxislabels <- c()
 	
 	# Find which rsids are in all given datasets
 	rsids <- pvalues$rsid # rsids in pvalue dataset
@@ -176,7 +176,12 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 		
 		rsids <- rsids[which(rsids %in% snp_probs$rsid)] #rsids in pvalue and snp_probs datasets
 	}
+	
+	# Define these objects here, so that log10BF plots is on top if it exists
 	datasetnames <- c(datasetnames,"logpval")
+	thresholds <- c(thresholds, -log10(pval_threshold))
+	labelprefix <- c(labelprefix, 'pvalue: ')
+	yaxislabels <- c(yaxislabels, '-log10 (pvalue)')
 	
 	if(!is.null(cond_pvalues)){
 		datasetnames <- c(datasetnames, "condlogpval")
