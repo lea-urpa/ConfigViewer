@@ -278,13 +278,13 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 	
 	# Create color vectors based on given thresholds
 	merged$pvalcolors <- NA
-	merged$pvalcolors[which(merged$pvalue <= 1e-6)] <- "deepskyblue"
-	merged$pvalcolors[which(merged$pvalue > 1e-6)] <- "navy"
+	merged$pvalcolors[which(merged$pvalue <= pval_threshold)] <- "deepskyblue"
+	merged$pvalcolors[which(merged$pvalue > pval_threshold)] <- "navy"
 	
 	if(!is.null(snp_probs)){
 		merged$BFcolors <- NA
-		merged$BFcolors[which(merged$snp_log10bf >= 2)] <- "orange"
-		merged$BFcolors[which(merged$snp_log10bf < 2)] <- "navy"	
+		merged$BFcolors[which(merged$snp_log10bf >= log10(snp_bf_threshold))] <- "orange"
+		merged$BFcolors[which(merged$snp_log10bf < log10(snp_bf_threshold))] <- "navy"	
 	}
 	
 	# Create correlations colors
