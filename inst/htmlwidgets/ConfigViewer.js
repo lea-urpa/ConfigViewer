@@ -126,7 +126,15 @@ HTMLWidgets.widget({
 						corrcolor: widgetdata['allplots']['corrcolors'][i]
 					}
 				}
+			} else {
+				for(var i=0; i<rsids.length; i++){
+					corrdata[rsids[i]] ={
+						topsnpcorr: "NA",
+						corrcolor: "NA"
+					}
+				}
 			}
+			
 
 			// Separate rsid indexable object for config data, if it exists
 			var rankdata = {};
@@ -134,6 +142,12 @@ HTMLWidgets.widget({
 				for(var i=0; i<rsids.length; i++){
 					rankdata[rsids[i]] ={
 						rank:  widgetdata['allplots']['configranks'][i]
+					}
+				}
+			} else {
+				for(var i=0; i<rsids.length; i++){
+					rankdata[rsids[i]] = {
+						rank:  "NA"
 					}
 				}
 			}
