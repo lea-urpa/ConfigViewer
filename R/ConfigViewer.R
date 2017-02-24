@@ -21,45 +21,51 @@
 #'		'position', and 'pvalue'. Other columns may be included, but
 #'		will be ignored in analysis.
 #' @param snp_probs An optional data frame containing the column names 'rsid',
-#'		'snp_prob', and 'snp_log10bf'. Other columns may be included, 
-#'		but will be ignored in the analysis. Corresponds to the .snp
+#'		'snp_prob', and 'snp_log10bf'. Corresponds to the .snp
 #'		output file from FINEMAP.
-#' @param cond_pvalues
+#' @param cond_pvalues An optional data frame containing the column names 'rsid',
+#'		and 'cond_pvalue'. Other columns may be included, but will be 
+#'		ignored in the analysis- meaning position values come from the pvalues
+#'		object.
+#' @param config_probs An optional data frame containing the column names 
+#'		'rank', 'config', 'config_prob', and 'config_log10bf'. Corresponds to 
+#'		the .config output file from FINEMAP
+#' @param correlations An optional data frame containing the column names
+#'		'rsid' and 'corr', giving each rsid's correlation to the top SNP. For 
+#'		datasets with a large LD correlation matrix, creating this object
+#' 		speeds up plot time significantly. Provide either correlations object,
+#' 		or z_file and ld_file together.
+#' @param z_file An optional data frame containing the column name 'rsid'. 
+#' 		Provide either correlations object, or z_file and ld_file together.
+#' 		Corresponds to the .z file input to FINEMAP.
+#' @param ld_file An optional correlations matrix of SNPs. Number of rows and
+#'		columns must match the z_file number of rows. Corresponds to the .ld
+#'		file input to FINEMAP.
+#' @param pval_threshold Threshold for plot color coding and threshold line
+#'		placement of conventional manhattan plots. Default 1e-6.
+#' @param snp_bf_threshold Threshold for plot color coding and threshold line 
+#'		placement of FINEMAP manhattan plot. Default 100, corresponding to a 
+#'		log10BF of 2.
+#' @param topconfigs Number of top configurations to display. 
+#' @param subsample Logical value asking whether, for datasets containing more
+#'		than 5000 variants, the nonsignificant (in p value and bayes factor)
+#'		variants should be subsampled. Speeds up plot responsiveness significantly
+#' 		for large datasets.
+#' @param width Manual setting of plot width- will disable dynamic resizing.
+#' @param height Manual setting of plot height- will disable dynamic resizing.
 #'
-#' 
 #'
 #'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
+
+
 ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_probs = NULL, 
 							correlations = NULL, z_file = NULL, ld_file = NULL,
 							pval_threshold = 1e-6, snp_bf_threshold = 100, topconfigs = 5,
 							subsample = TRUE,
-							 width = NULL, height = NULL, elementId = NULL) {
-  
+							 width = NULL, height = NULL) {
+    
+	elementId = NULL
+	
 	# Run through data input checks to make sure everything is OK
 
 	# Check that data frames are data frames
@@ -246,7 +252,7 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 		configsvector <- unique(unlist(configslist))
 		
 		if(all(configsvector %in% rsids) == FALSE){
-			stop("Top configs contain rsids not in all given datasets.")
+			stop("Top configs contain rsids absent from a given dataset.")
 		}
 		
 		merged$ranks <- "notintopconfigs"
