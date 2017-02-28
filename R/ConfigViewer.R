@@ -261,7 +261,7 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 		
 		configsvector <- unique(unlist(configslist))
 		
-		if(all(configsvector %in% rsids) == FALSE){
+		if(any(configsvector %in% rsids) == FALSE){
 			stop("Top configs contain rsids absent from a given dataset.")
 		}
 		
@@ -271,7 +271,7 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 			for(j in 1:length(configslist[[i]]) ){
 				rank <- paste("rank", i, sep = "")
 				snp <- configslist[[i]][j]
-		
+				
 				if( merged$ranks[which(merged$rsid %in% snp)] != "notintopconfigs"){
 					merged$ranks[which(merged$rsid %in% snp)] <- paste(merged$ranks[which(merged$rsid %in% snp)], rank)
 				} else {		
