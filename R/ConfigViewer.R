@@ -261,7 +261,7 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 		
 		configsvector <- unique(unlist(configslist))
 		
-		if(any(configsvector %in% rsids) == FALSE){
+		if(any(configsvector %in% merged$rsid) == FALSE){
 			stop("Top configs contain rsids absent from a given dataset.")
 		}
 		
