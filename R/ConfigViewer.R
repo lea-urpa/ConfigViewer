@@ -229,7 +229,7 @@ ConfigViewer <- function(pvalues, snp_probs = NULL, cond_pvalues = NULL, config_
 			stop("Missing correlation information for some rsids")
 		}
 		
-		correlations <- correlations[which(rsids %in% correlations$rsid), ]
+		correlations <- correlations[which(correlations$rsid %in% rsids), ]
 		merged <- merge(merged, correlations[,c("rsid","corr")])
 	}
 	# Check that all these rsids are present in zfile, extract top snp correlation from ld file, truncate file, and merge
